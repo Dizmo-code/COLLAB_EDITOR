@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
 function App() {
     const [document, setDocument] = useState("");
     const [socket, setSocket] = useState(null);
+    const debounceRef = useRef(null);
 
     useEffect(() => {
         const newSocket = new WebSocket('wss://collab-editor-edmo.onrender.com');
@@ -39,12 +40,19 @@ function App() {
         };
     }, []);
 
+    // Debounced handleChange
     const handleChange = (e) => {
         const newDocument = e.target.value;
         setDocument(newDocument);
-        if (socket && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({ type: 'update', data: newDocument }));
-        }
+
+        // Debounce sending updates to WebSocket
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+
+        debounceRef.current = setTimeout(() => {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ type: 'update', data: newDocument }));
+            }
+        }, 200); // 200 ms debounce - change as needed
     };
 
     return (
