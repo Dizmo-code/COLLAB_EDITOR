@@ -6,7 +6,7 @@ function App() {
     const [socket, setSocket] = useState(null);
 
     useEffect(() => {
-        const newSocket = new WebSocket('ws://localhost:5000');
+        const newSocket = new WebSocket('ws://collab-editor-edmo.onrender.com');
         setSocket(newSocket);
 
         newSocket.onopen = () => {
