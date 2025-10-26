@@ -64,6 +64,9 @@ function App() {
                 rows="20"
                 cols="80"
             />
+             <footer>
+            Built by <span>Harsh Kumar</span> & <span>Anuska Rai</span>
+        </footer>
         </div>
     );
 }
