@@ -1,67 +1,85 @@
-import React, { useState, useEffect, useRef } from 'react';
-import './App.css';
+import React, { useState, useEffect, useRef } from "react";
+import { io } from "socket.io-client";
+import "./App.css";
 
 function App() {
-  const [document, setDocument] = useState('');
+  const [documentText, setDocumentText] = useState("");
   const [socket, setSocket] = useState(null);
+  const [isLightMode, setIsLightMode] = useState(false);
   const debounceRef = useRef(null);
 
+  // --- Connect WebSocket ---
   useEffect(() => {
-    const newSocket = new window.WebSocket('wss://collab-editor-edmo.onrender.com');
+    const socketURL =
+      window.location.hostname === "localhost"
+        ? "http://localhost:5000"
+        : "https://collab-editor-edmo.onrender.com";
+
+    const newSocket = io(socketURL, {
+      transports: ["websocket"],
+      reconnection: true,
+    });
+
     setSocket(newSocket);
 
-    newSocket.onopen = () => {
-      console.log('WebSocket connected');
-    };
-
-    newSocket.onmessage = (event) => {
-      try {
-        const message = JSON.parse(event.data);
-        if (message.type === 'init' || message.type === 'update') {
-          setDocument(message.data);
-        }
-      } catch (err) {
-        // ignore error
-      }
-    };
-
-    newSocket.onclose = () => {
-      console.log('WebSocket closed');
-    };
-
-    newSocket.onerror = (err) => {
-      console.log('WebSocket error', err);
-    };
+    newSocket.on("connect", () => console.log("🟢 Connected"));
+    newSocket.on("init", (data) => setDocumentText(data));
+    newSocket.on("update", (data) => setDocumentText(data));
 
     return () => {
-      newSocket.close();
+      newSocket.disconnect();
     };
   }, []);
 
+  // --- Debounced text sync ---
   const handleChange = (e) => {
     const value = e.target.value;
-    setDocument(value);
+    setDocumentText(value);
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
-
     debounceRef.current = setTimeout(() => {
-      if (socket && socket.readyState === 1) {
-        socket.send(JSON.stringify({ type: 'update', data: value }));
-      }
-    }, 200); // adjust delay as needed
+      if (socket) socket.emit("update", value);
+    }, 200);
   };
 
+  // --- Handle theme toggle ---
+  const toggleMode = () => {
+    setIsLightMode((prev) => !prev);
+  };
+
+  // --- Apply theme to body AFTER React updates ---
+  useEffect(() => {
+    if (typeof document !== "undefined" && document.body) {
+      if (isLightMode) {
+        document.body.classList.add("light-body");
+      } else {
+        document.body.classList.remove("light-body");
+      }
+    }
+  }, [isLightMode]);
+
   return (
-    <div className="App">
+    <div className={`App ${isLightMode ? "light-mode" : ""}`}>
+      <button className="mode-toggle" onClick={toggleMode}>
+        {isLightMode ? "🌙 Dark Mode" : "☀️ Light Mode"}
+      </button>
+
       <h1>Collaborative Editor</h1>
-      <textarea
-        value={document}
-        onChange={handleChange}
-        rows={20}
-        cols={80}
-      />
+
+      <div className="editor-wrapper">
+        <textarea
+          value={documentText}
+          onChange={handleChange}
+          rows={20}
+          cols={80}
+          placeholder="Start typing and watch it sync..."
+        />
+      </div>
+
       <footer>
-        Built by <span>Harsh Kumar</span> & <span>Anuska Rai</span>
+        <p>
+          Built by <span>Harsh Kumar</span> & <span>Anuska Rai</span>
+        </p>
       </footer>
     </div>
   );

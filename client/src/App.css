@@ -1,148 +1,127 @@
-/* === Minimalist Root Reset === */
+/* === Base Layout === */
 body {
   margin: 0;
   padding: 0;
   font-family: 'Poppins', sans-serif;
+  background: #0f1116;
+  color: #e6e6e6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-height: 100vh;
-  background: #111; /* Default: dark mode */
-  color: #fff;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* === Light Mode for Body === */
+body.light-body {
+  background: #fafafa;
+  color: #1f1f1f;
+}
+
+/* === App Wrapper === */
+.App {
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: background 0.3s, color 0.3s;
-  position: relative;
+  width: 90%;
+  max-width: 800px;
+  transition: background 0.4s ease, color 0.4s ease;
 }
 
-/* Light theme class (applied to body or a main wrapper) */
+/* === Light Mode === */
 .light-mode {
-  background: #f9f9f9;
-  color: #181818;
+  background: #fafafa;
+  color: #1f1f1f;
 }
 
-/* === Toggle Button (optional class) === */
+/* === Toggle Button === */
 .mode-toggle {
-  position: fixed;
-  top: 24px;
-  right: 30px;
-  background: none;
-  border: 1.5px solid #fff;
-  color: #fff;
-  font-size: 1rem;
+  align-self: flex-end;
+  margin-bottom: 30px;
   padding: 8px 18px;
+  border: 1.5px solid #c7b464;
   border-radius: 22px;
+  background: transparent;
+  color: #c7b464;
   cursor: pointer;
-  z-index: 100;
-  transition: background 0.25s, color 0.25s, border 0.25s;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+.mode-toggle:hover {
+  background: #c7b464;
+  color: #0f1116;
 }
 .light-mode .mode-toggle {
-  border: 1.5px solid #181818;
-  color: #181818;
+  border-color: #1f1f1f;
+  color: #1f1f1f;
+}
+.light-mode .mode-toggle:hover {
+  background: #1f1f1f;
+  color: #fef4b8;
 }
 
-/* Minimalist Content Area */
+/* === Title === */
 h1 {
-  margin-top: 70px;
-  font-size: 2.5rem;
+  font-size: 2.4rem;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  background: linear-gradient(90deg, #c7b464, #e3d391);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 25px;
   text-align: center;
+  transition: all 0.4s ease;
+}
+
+/* === Editor === */
+.editor-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 textarea {
-  margin-top: 30px;
-  width: 90vw;
-  max-width: 700px;
-  height: 60vh;
-  background: transparent;
-  color: inherit;
-  border: 1.5px solid #444;
+  width: 100%;
+  height: 55vh;
+  background: #1a1c23;
+  color: #f4f4f4;
+  border: 1.5px solid #2e313a;
   border-radius: 14px;
+  padding: 16px;
   font-size: 1rem;
+  line-height: 1.6;
   resize: none;
   outline: none;
-  padding: 16px;
-  transition: border 0.2s, background 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+textarea:focus {
+  border-color: #c7b464;
+  box-shadow: 0 0 14px rgba(199, 180, 100, 0.2);
 }
 .light-mode textarea {
-  border: 1.5px solid #ccc;
+  background: #ffffff;
+  color: #1f1f1f;
+  border: 1.5px solid #b79b00;
+  box-shadow: 0 0 10px rgba(240, 210, 70, 0.1);
 }
 
-/* Minimalist Footer */
+/* === Footer === */
 footer {
-  margin-top: auto;
-  width: 100vw;
-  padding: 20px 0 28px 0;
+  margin-top: 30px;
+  font-size: 0.95rem;
   text-align: center;
-  background: transparent;
-  color: inherit;
-  font-size: 1rem;
-  letter-spacing: 0.3px;
-}
-
-/* Editor wrapper for custom width */
-.editor-wrapper {
-  width: 90vw;
-  max-width: 700px;
-  margin-bottom: 30px;
-}
-
-/* React Quill Custom Styles for Dark Theme */
-.ql-container {
-  background: #181818 !important;
-  color: #fff !important;
-  border-radius: 14px;
-  min-height: 300px;
-  border: 1.5px solid #444 !important;
-}
-
-.ql-editor {
-  background: transparent !important;
-  color: #fff !important;
-  min-height: 250px;
-}
-
-.ql-toolbar {
-  background: #181818 !important;
-  border-radius: 14px 14px 0 0;
-  border: 1.5px solid #444 !important;
-  border-bottom: none !important;
-}
-
-.ql-toolbar button,
-.ql-toolbar .ql-picker {
-  color: #fff !important;
-  fill: #fff !important;
-}
-
-.ql-toolbar .ql-picker-label {
-  color: #fff !important;
-}
-
-.ql-toolbar .ql-active {
-  color: #ffe259 !important;
-}
-
-/* === Hue Gradient at Bottom === */
-.hue-bar {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100vw;
-  height: 7vh;
-  min-height: 36px;
-  background: linear-gradient(90deg, #ffe259 5%, #ffdf00 50%, #ffae00 95%);
   opacity: 0.85;
-  border-radius: 12px 12px 0 0;
-  z-index: 99;
-  pointer-events: none;
+  transition: all 0.3s ease;
+}
+footer span {
+  color: #c7b464;
+  font-weight: 500;
+}
+.light-mode footer span {
+  color: #b79b00;
 }
 
-.light-mode .hue-bar {
-  background: linear-gradient(90deg, #fffbe7 10%, #ffed85 60%, #ffe259 90%);
-  opacity: 0.5;
-}
-
-/* === Hide scrollbars for minimalism === */
+/* === Hide Scrollbar === */
 textarea::-webkit-scrollbar {
   display: none;
 }
