@@ -9,7 +9,8 @@ app.use(cors());
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-let document = ""; // Store the document content
+// Stores the current document HTML for all clients
+let document = "";
 
 wss.on('connection', (ws) => {
     console.log('New client connected!');
@@ -19,9 +20,12 @@ wss.on('connection', (ws) => {
     ws.on('message', (message) => {
         try {
             const parsedMessage = JSON.parse(message);
+
+            // If a client sends an 'update' message, update and broadcast document
             if (parsedMessage.type === 'update') {
-                document = parsedMessage.data;
-                // Broadcast the update to all connected clients
+                document = parsedMessage.data; // This will be HTML content from the rich editor
+
+                // Broadcast the updated document to all connected clients
                 wss.clients.forEach((client) => {
                     if (client.readyState === WebSocket.OPEN) {
                         client.send(JSON.stringify({ type: 'update', data: document }));
@@ -40,5 +44,5 @@ wss.on('connection', (ws) => {
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
+    console.log(`Server is listening on port ${PORT}`);
 });
