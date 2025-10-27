@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './App.css';
@@ -7,6 +7,12 @@ function App() {
   const [document, setDocument] = useState("");
   const [socket, setSocket] = useState(null);
   const debounceRef = useRef(null);
+
+  const toolbarOptions = useMemo(() => [
+    ['bold', 'italic', 'underline'],
+    [{ list: 'ordered'}, { list: 'bullet' }],
+    ['clean'],
+  ], []);
 
   useEffect(() => {
     const newSocket = new WebSocket('wss://collab-editor-edmo.onrender.com');
@@ -41,7 +47,7 @@ function App() {
   }, []);
 
   // Debounced handler for editor changes
-  const handleChange = (content, delta, source, editor) => {
+  const handleChange = (content) => {
     setDocument(content);
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -53,21 +59,17 @@ function App() {
     }, 200);
   };
 
-  const toolbarOptions = [
-    ['bold', 'italic', 'underline'],
-    [{ list: 'ordered'}, { list: 'bullet' }],
-    ['clean'],
-  ];
-
   return (
     <div className="App">
       <h1>Collaborative Editor</h1>
-      <ReactQuill
-        value={document}
-        onChange={handleChange}
-        modules={{ toolbar: toolbarOptions }}
-        theme="snow"
-      />
+      <div className="editor-wrapper">
+        <ReactQuill
+          value={document}
+          onChange={handleChange}
+          modules={{ toolbar: toolbarOptions }}
+          theme="snow"
+        />
+      </div>
       <footer>
         Built by <span>Harsh Kumar</span> & <span>Anuska Rai</span>
       </footer>

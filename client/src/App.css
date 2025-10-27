@@ -13,18 +13,12 @@ body {
   width: 100vw;
   box-sizing: border-box;
 }
+
 .light-mode {
   background: #f9f9f9;
   color: #181818;
 }
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
+
 h1 {
   margin-top: 70px;
   margin-bottom: 28px;
@@ -32,25 +26,7 @@ h1 {
   font-weight: 700;
   text-align: center;
 }
-textarea {
-  margin-bottom: 30px;
-  width: 90vw;
-  max-width: 700px;
-  height: 60vh;
-  background: transparent;
-  color: inherit;
-  border: 1.5px solid #444;
-  border-radius: 16px;
-  font-size: 1.15rem;
-  resize: none;
-  outline: none;
-  padding: 18px;
-  transition: border 0.2s, background 0.2s;
-  box-sizing: border-box;
-}
-.light-mode textarea {
-  border: 1.5px solid #ccc;
-}
+
 footer {
   width: 100vw;
   text-align: center;
@@ -60,6 +36,49 @@ footer {
   letter-spacing: 0.3px;
   margin-bottom: 20px;
 }
+
+.editor-wrapper {
+  width: 90vw;
+  max-width: 700px;
+  margin-bottom: 30px;
+}
+
+/* React Quill Custom Styles for Dark Theme */
+.ql-container {
+  background: #181818 !important;
+  color: #fff !important;
+  border-radius: 14px;
+  min-height: 300px;
+  border: 1.5px solid #444 !important;
+}
+
+.ql-editor {
+  background: transparent !important;
+  color: #fff !important;
+  min-height: 250px;
+}
+
+.ql-toolbar {
+  background: #181818 !important;
+  border-radius: 14px 14px 0 0;
+  border: 1.5px solid #444 !important;
+  border-bottom: none !important;
+}
+
+.ql-toolbar button,
+.ql-toolbar .ql-picker {
+  color: #fff !important;
+  fill: #fff !important;
+}
+
+.ql-toolbar .ql-picker-label {
+  color: #fff !important;
+}
+
+.ql-toolbar .ql-active {
+  color: #ffe259 !important;
+}
+
 .hue-bar {
   position: fixed;
   left: 0;
@@ -73,14 +92,9 @@ footer {
   z-index: 99;
   pointer-events: none;
 }
+
 .light-mode .hue-bar {
   background: linear-gradient(90deg, #fffbe7 10%, #ffed85 60%, #ffe259 90%);
   opacity: 0.5;
 }
-/* Hide scrollbars for minimalism */
-textarea::-webkit-scrollbar {
-  display: none;
-}
-textarea {
-  scrollbar-width: none;
-}
+
