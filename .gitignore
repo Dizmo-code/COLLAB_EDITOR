@@ -1,0 +1,12 @@
+# Node dependencies
+node_modules
+
+# Firebase key (important!)
+firebase-key.json
+
+# Environment files
+.env
+
+# Logs
+npm-debug.log
+*.log
